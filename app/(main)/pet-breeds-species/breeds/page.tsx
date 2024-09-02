@@ -92,76 +92,6 @@ export default function BreedPage() {
 
   const { toast } = useToast();
 
-  const breedInputRef = React.useRef<HTMLInputElement>(null);
-
-  const [speciesList, setSpeciesList] = React.useState<SpeciesProps[]>([]);
-  const [ breedList, setBreedList ] = React.useState<BreedProps[]>([]);
-  const [breed, setBreed] = React.useState('');
-  const [species, setSpecies] = React.useState('');
-  React.useEffect(() => {
-    fetchSpecies();
-    fetchBreeds();
-  }, []);
-
-  
-  const fetchSpecies = async () => {
-    const response = await axios.get<SpeciesProps[]>(`${process.env.NEXT_PUBLIC_URL}php/species.php`, {
-      params: { operation: 'getSpecies' }
-    });
-    console.log(response.data)
-    if (response.data.length > 0) {
-      const List: SpeciesProps[] = Array.isArray(response.data) ? response.data.map((species: SpeciesProps) => ({
-        SpeciesID: species.SpeciesID,
-        SpeciesName: species.SpeciesName
-      })) : [];
-      console.log(List)
-      setSpeciesList(List);
-    }
-  }
-
-  const fetchBreeds = async () => {
-    const response = await axios.get<BreedProps[]>(`${process.env.NEXT_PUBLIC_URL}php/breeds.php`, {
-      params: { operation: 'getBreed' }
-    })
-    console.log(response.data);
-
-    const List: BreedProps[] = Array.isArray(response.data) ? response.data.map((breed: BreedProps) => ({
-      BreedID: breed.BreedID,
-      BreedName: breed.BreedName,
-      Species: breed.Species
-    })) : [];
-
-    setBreedList(List);
-  }
-
-  
-
-
-  const addBreed = async () => {
-
-    // Define the breedData object with the necessary properties
-  const breedData: BreedFormProps = {
-    breed: breedInputRef.current!.value,
-    species: Number(species)
-  };
-
-  const formData = new FormData();
-
-  formData.append('operation', 'addBreed');
-  formData.append('json', JSON.stringify(breedData));
-
-
-  // Send the data using axios
-  const response = await axios({
-    url: `${process.env.NEXT_PUBLIC_URL}php/breeds.php`,
-    method: 'POST',
-    data: formData
-  });
-
-  // Log the response data
-  console.log(response.data);
-
-  }
 
   const errorToast = () => {
     toast({
@@ -249,8 +179,6 @@ export default function BreedPage() {
                           Breed
                         </Label>
                         <Input
-                          ref={breedInputRef}
-                          onChange={(e) => setBreed(e.target.value)}
                           id="name"
                           defaultValue=""
                           className="col-span-3"
@@ -266,25 +194,25 @@ export default function BreedPage() {
                           defaultValue="@peduarte"
                           className="col-span-3"
                         /> */}
-                        <Select onValueChange={(e) => setSpecies(e)}>
+                        <Select>
                           <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="" />
                           </SelectTrigger>
                           <SelectContent>
-                            { speciesList.map((species: SpeciesProps) => (
+                            {/* { speciesList.map((species: SpeciesProps) => (
                               <SelectItem
                                 key={species.SpeciesID}
                                 value={species.SpeciesID.toString()}
                               >
                                 {species.SpeciesName}
                               </SelectItem>
-                            ))}
+                            ))} */}
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
                     <DialogFooter>
-                      <Button onClick={() => { breed == '' || species == '' ? errorToast() : addBreed()}} type="submit">Submit</Button>
+                      <Button type="submit">Submit</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -323,48 +251,48 @@ export default function BreedPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      { breedList.map((breed: BreedProps) => (
+                      {/* {breedList.map((breed: BreedProps) => (
                         <TableRow key={breed.BreedID}>
-                        <TableCell className="hidden sm:table-cell">
-                        {breed.BreedID}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {breed.BreedName}
-                        </TableCell>
-                        <TableCell>
-                          {/* <Badge variant="outline">Active</Badge> */}
-                          {breed.Species}
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          {/* $199.99 */}
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          {/* 30 */}
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2024-02-14 02:14 PM
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                      ))}
+                          <TableCell className="hidden sm:table-cell">
+                            {breed.BreedID}
+                          </TableCell>
+                          <TableCell className="font-medium">
+                            {breed.BreedName}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline">Active</Badge>
+                            {breed.Species}
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            $199.99
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            30
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            2024-02-14 02:14 PM
+                          </TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  aria-haspopup="true"
+                                  size="icon"
+                                  variant="ghost"
+                                >
+                                  <MoreHorizontal className="h-4 w-4" />
+                                  <span className="sr-only">Toggle menu</span>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                                <DropdownMenuItem>Delete</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))} */}
                     </TableBody>
                   </Table>
                 </CardContent>

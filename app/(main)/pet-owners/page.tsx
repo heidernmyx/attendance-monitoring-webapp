@@ -84,69 +84,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 
 
-interface OwnerFormField {
-  owner: string,
-  contact_details: string,
-  address: string,
-}
-
 export default function PetOwnerPage() {
 
-  const { register, handleSubmit} = useForm<OwnerFormField>();
-  const { toast } = useToast();
-  const [ ownerList, setOwnerList ] = React.useState<OwnerProps[]>([]);
-
-  React.useEffect(() => {
-    // fetchSpecies();
-    fetchOwners();
-  }, [])
-
-  const fetchOwners = async () => {
-    const url = `${process.env.NEXT_PUBLIC_URL}php/owners.php`;
-    const response = await axios.get<OwnerProps[]>(`${url}`,{
-      params: { operation: 'getOwner' }
-    })
-
-    console.log(response.data);
-    
-    const ownerList: OwnerProps[] = Array.isArray(response.data) ? response.data.map((owner) => ({
-      OwnerID: owner.OwnerID,
-      Name: owner.Name,
-      ContactDetails: owner.ContactDetails,
-      Address: owner.Address
-    })) : [];
-    setOwnerList(ownerList);
-  }
-
-  const submitOwner: SubmitHandler<OwnerFormField> = async (data) => {
-    console.log(true)
-    console.log(data)
-
-    const ownerDetails: OwnerFormField = {
-      address: data.address,
-      contact_details: data.contact_details,
-      owner: data.owner
-    }
-    const formData = new FormData();
-    formData.append('operation', 'addOwner');
-    formData.append('json', JSON.stringify(ownerDetails));
-    const response = await axios({
-      url: `${process.env.NEXT_PUBLIC_URL}php/owners.php`,
-      method: 'POST',
-      data: formData
-    })
-
-    console.log(response.data);
-    if (response.data == 1) {
-      toast({
-        variant: "default",
-        title: "Success!",
-        description: "Owner Added Successfully",
-        // action: <ToastAction altText="Try again">Try again</ToastAction>,
-        type: "foreground",
-      })
-    }
-  }
 
   return (
     <>
@@ -201,7 +140,7 @@ export default function PetOwnerPage() {
                   </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
-                    <form onSubmit={handleSubmit(submitOwner)}>
+                    <form>
                       <DialogHeader>
                         <DialogTitle>Add Owner</DialogTitle>
                         <DialogDescription>
@@ -214,7 +153,6 @@ export default function PetOwnerPage() {
                             Owner Name
                           </Label>
                           <Input
-                            { ...register('owner', {required: true})}
                             id="name"
                             defaultValue=""
                             className="col-span-3"
@@ -226,7 +164,6 @@ export default function PetOwnerPage() {
                             Contact Details
                           </Label>
                           <Input
-                            { ...register('contact_details', {required: true})}
                             id="username"
                             placeholder="#"
                             className="col-span-3"
@@ -235,7 +172,6 @@ export default function PetOwnerPage() {
                             Address
                           </Label>
                           <Input
-                            { ...register('address', {required: true})}
                             id="username"
                             placeholder="@"
                             className="col-span-3"
@@ -293,7 +229,7 @@ export default function PetOwnerPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      { ownerList.map((owner) => 
+                      {/* { ownerList.map((owner) => 
                       <TableRow key={owner.OwnerID}>
                         <TableCell className="hidden sm:table-cell">
                           {owner.OwnerID}
@@ -301,15 +237,15 @@ export default function PetOwnerPage() {
                         <TableCell className="font-medium">
                           {owner.Name}
                         </TableCell>
-                        {/* <TableCell>
+                        <TableCell>
                           <Badge variant="outline">Active</Badge>
-                        </TableCell> */}
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          {/* $199.99 */}
+                          $199.99
                           { owner.ContactDetails}
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          {/* 30 */}
+                          30
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
                           {owner.Address}
@@ -333,7 +269,7 @@ export default function PetOwnerPage() {
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
-                      </TableRow>)}
+                      </TableRow>)} */}
                     </TableBody>
                   </Table>
                 </CardContent>

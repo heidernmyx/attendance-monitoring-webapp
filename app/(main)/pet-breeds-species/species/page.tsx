@@ -58,66 +58,6 @@ import axios from 'axios';
 
 export default function PetSpecies() {
 
-  const [ species, setSpecies ] = React.useState('');
-  const [ speciesList, setSpeciesList ] = React.useState<SpeciesProps[]>([]);
-  const { toast } = useToast()
-  const speciesInputRef = React.useRef<HTMLInputElement>(null);
-
-  React.useEffect(() => {
-    fetchSpecies();
-  }, [])
-
-  const fetchSpecies = async () => {
-    const response = await axios.get<SpeciesProps[]>(`${process.env.NEXT_PUBLIC_URL}php/species.php`, {
-      params: {
-        operation: 'getSpecies'
-      }
-    });
-    console.log(response.data)
-    if (response.data.length > 0) {
-      const List: SpeciesProps[] = Array.isArray(response.data) ? response.data.map((species: SpeciesProps) =>  ({
-        SpeciesID: species.SpeciesID,
-        SpeciesName: species.SpeciesName
-      })): [];
-  
-      console.log(List)
-      setSpeciesList(List);
-    }
-  }
-
-  const submitSpecies = async (e: any) => {
-    e?.preventDefault();
-
-    const formData = new FormData();
-    formData.append('operation', 'addSpecies');
-    formData.append('json', JSON.stringify({ species }));
-    const response = await axios({
-      url: `${process.env.NEXT_PUBLIC_URL}php/species.php`,
-      method: 'POST',
-      data: formData
-    })
-    console.log(response.data);
-    if (response.data == 1) {
-      toast({
-        variant: "default",
-        title: "Species added successfully.",
-        // description: "There was a problem with your request.",
-        // action: <ToastAction altText="Try again">Try again</ToastAction>,
-      })
-      speciesInputRef.current!.value = '';
-    }
-  }
-
-
-  const errorToast = () => {
-    toast({
-      variant: "destructive",
-      title: "Uh oh! Something went wrong.",
-      description: "There was a problem with your request.",
-      action: <ToastAction altText="Try again">Try again</ToastAction>,
-    })
-  }
-
   return (
     <div className="flex flex-col">
       <div>
@@ -170,7 +110,7 @@ export default function PetSpecies() {
                 </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
-                  <form onSubmit={submitSpecies}>
+                  <form >
                     <DialogHeader>
                       <DialogTitle>Add Species</DialogTitle>
                       <DialogDescription>
@@ -183,8 +123,6 @@ export default function PetSpecies() {
                           Species
                         </Label>
                         <Input
-                          ref={speciesInputRef}
-                          onChange={(e) => setSpecies(e.target.value)}
                           id="name"
                           defaultValue=""
                           className="col-span-3"
@@ -193,7 +131,7 @@ export default function PetSpecies() {
                       </div>
                     </div>
                     <DialogFooter>
-                      <Button onClick={(e) => species == '' ? errorToast() : submitSpecies(e)}
+                      <Button 
                         type="submit">
                         Submit
                       </Button>
@@ -239,7 +177,7 @@ export default function PetSpecies() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    { speciesList.map((value) => (  
+                    {/* { speciesList.map((value) => (  
                       <TableRow key={value.SpeciesID}>
                         <TableCell className="hidden sm:table-cell">
                           {value.SpeciesID}
@@ -248,13 +186,13 @@ export default function PetSpecies() {
                           {value.SpeciesName}
                         </TableCell>
                         <TableCell>
-                          {/* <Badge variant="outline">Active</Badge> */}
+                          <Badge variant="outline">Active</Badge>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          {/* $199.99 */}
+                          $199.99
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          {/* 30 */}
+                          30
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
                           2024-02-14 02:14 PM
@@ -279,7 +217,7 @@ export default function PetSpecies() {
                           </DropdownMenu>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    ))} */}
                   </TableBody>
                 </Table>
               </CardContent>
